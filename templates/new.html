@@ -1,0 +1,111 @@
+{% include "header.html" %}
+
+<a href="/">Tillbaka</a>
+<h2>Skapa nytt event</h2>
+<form action="/submit" method="post" enctype="multipart/form-data" id="form" onsubmit="return validateForm()">
+    <label for="title" class="font-weight-bold">Titel <span class="required">*</span></label>
+    <input type="text" name="title" class="form-control form-control-lg" />
+    <br />
+    <label for="committee" class="font-weight-bold">Nämnd <span class="required">*</span></label>
+    <select name="committee" class="form-control">
+        {% for committee in committees %}
+        <option value="{{committee.name}}">{{committee.name}}</option>
+        {% endfor %}
+    </select>
+    <br />
+    <label for="location" class="font-weight-bold">Plats <span class="required">*</span></label>
+    <input type="text" name="location" class="form-control" />
+    <br />
+    <div class="form-row">
+        <div class="col">
+            <label for="start" class="font-weight-bold">Start <span class="required">*</span></label>
+            <input type="text" name="start" class="form-control datetime-picker" />
+        </div>
+        <div class="col">
+            <label for="end" class="font-weight-bold">Slut <span class="required">*</span></label>
+            <input type="text" name="end" class="form-control datetime-picker" />
+        </div>
+    </div>
+    <br />
+    <label for="description" class="font-weight-bold">Beskrivning <span class="required">*</span></label>
+    <input type="hidden" name="description"></textarea>
+    <div id="editor">
+    </div>
+    <label for="facebook_url" class="font-weight-bold">Facebook-länk</label>
+    <input type="text" name="facebook_url" class="form-control" />
+    <br />
+    <br />
+    <label for="cover_image" class="font-weight-bold">Omslagsbild</label>
+    <input type="file" name="cover_image" accept="image/png, image/jpeg" class="form-control-file" />
+    <br />
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="published" name="published" checked>
+        <label class="form-check-label" for="published">Publicerad</label>
+    </div>
+    <br />
+    <input type="submit" class="btn btn-primary" value="Skapa" />
+</form>
+
+<style>
+.required {
+    color: red;
+}
+
+#editor {
+    height: 250px;
+}
+
+.ql-editor > p {
+    margin-bottom: 1rem;
+}
+</style>
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script>
+var quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+        toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['link'], ['clean']]
+    }
+});
+
+quill.on('editor-change', function() {
+    document.forms["form"]["description"].value = quill.container.firstChild.innerHTML;
+});
+
+function validateForm() {
+    var form = document.forms["form"];
+
+    var missingFields = [];
+
+    if (form["title"].value == "") {
+        missingFields.push("titel");
+    }
+    if (form["committee"].value == "") {
+        missingFields.push("nämnd");
+    }
+    if (form["location"].value == "") {
+        missingFields.push("plats");
+    }
+    if (form["start"].value == "") {
+        missingFields.push("starttid");
+    }
+    if (form["end"].value == "") {
+        missingFields.push("sluttid");
+    }
+    if (form["description"].value == "") {
+        missingFields.push("beskrivning");
+    }
+
+    if (missingFields.length != 0) {
+        alert("Du måste fylla i " + missingFields.join(", ") + ".");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+{% include "footer.html" %}

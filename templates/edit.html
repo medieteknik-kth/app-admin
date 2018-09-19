@@ -1,0 +1,132 @@
+{% include "header.html" %}
+
+<a href="/">Tillbaka</a>
+<h2>Redigera event</h2>
+<form action="/update" method="post" enctype="multipart/form-data" id="form" onsubmit="return validateForm()">
+    <br />
+    <label for="title" class="font-weight-bold">Titel <span class="required">*</span></label>
+    <input type="text" name="title" class="form-control form-control-lg" value="{{event.title}}" />
+    <br />
+    <label for="committee" class="font-weight-bold">Nämnd <span class="required">*</span></label>
+    <select name="committee" class="form-control">
+        {% for committee in committees %}
+        <option value="{{committee.name}}" {{ 'selected' if event.committee==committee.name }}>{{committee.name}}</option>
+        {% endfor %}
+    </select>
+    <br />
+    <label for="location" class="font-weight-bold">Plats <span class="required">*</span></label>
+    <input type="text" name="location" class="form-control" value="{{event.location}}" />
+    <br />
+    <div class="form-row">
+        <div class="col">
+            <label for="start" class="font-weight-bold">Start <span class="required">*</span></label>
+            <input type="text" name="start" class="form-control datetime-picker" value="{{event.start|format_datetime}}" />
+        </div>
+        <div class="col">
+            <label for="end" class="font-weight-bold">Slut <span class="required">*</span></label>
+            <input type="text" name="end" class="form-control datetime-picker" value="{{event.end|format_datetime}}" />
+        </div>
+    </div>
+    <br />
+    <label for="description" class="font-weight-bold">Beskrivning <span class="required">*</span></label>
+    <input type="hidden" name="description" />
+    <div id="editor">{{event.description|safe}}</div>
+    <br />
+    <label for="facebook_url" class="font-weight-bold">Facebook-länk</label>
+    <input type="text" name="facebook_url" class="form-control" value="{{event.facebook_url}}" />
+    <br />
+    <label for="cover_image" class="font-weight-bold">Omslagsbild</label>
+    {% if event.cover_image %}
+    <div id="cover_image_form">
+        <br />
+        <img src="{{event.cover_image}}" class="img-fluid" />
+        <br />
+        <button type="button" class="btn btn-danger btn-sm" onclick="if(confirm('Är du säker på att du vill ta bort omslagsbilden?')) { removeCoverImage(); }">Ta bort omslagsbild</button>
+        <br />
+        <br />
+    </div>
+    {% endif %}
+    <input type="file" name="cover_image" accept="image/png, image/jpeg" class="form-control-file" />
+    <br />
+    <input type="hidden" name="id" value="{{event.id}}" />
+    <input type="hidden" id="cover_image_filename" name="cover_image_filename" value="{{event.cover_image}}" />
+    <br />
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="published" name="published" {{ "checked" if event.published else "" }}>
+        <label class="form-check-label" for="published">Publicerad</label>
+    </div>
+    <br />
+    <input type="submit" class="btn btn-primary" value="Spara" />
+    <a class="btn btn-danger" href="/delete/{{event.id}}" role="button" onclick="return confirm('Är du säker på att du vill ta bort eventet?')">Ta bort</a>
+</form>
+
+<style>
+.required {
+    color: red;
+}
+
+#editor {
+    height: 250px;
+}
+
+.ql-editor > p {
+    margin-bottom: 1rem;
+}
+</style>
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script>
+var quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+        toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['link'], ['clean']]
+    }
+});
+
+quill.on('editor-change', function() {
+    document.forms["form"]["description"].value = quill.container.firstChild.innerHTML;
+});
+
+document.forms["form"]["description"].value = quill.container.firstChild.innerHTML;
+
+function validateForm() {
+    var form = document.forms["form"];
+
+    var missingFields = [];
+
+    if (form["title"].value == "") {
+        missingFields.push("titel");
+    }
+    if (form["committee"].value == "") {
+        missingFields.push("nämnd");
+    }
+    if (form["location"].value == "") {
+        missingFields.push("plats");
+    }
+    if (form["start"].value == "") {
+        missingFields.push("starttid");
+    }
+    if (form["end"].value == "") {
+        missingFields.push("sluttid");
+    }
+    if (form["description"].value == "") {
+        missingFields.push("beskrivning");
+    }
+
+    if (missingFields.length != 0) {
+        alert("Du måste fylla i " + missingFields.join(", ") + ".");
+        return false;
+    }
+
+    return true;
+}
+
+function removeCoverImage() {
+    document.getElementById("cover_image_form").style.display = "none";
+    document.getElementById("cover_image_filename").value = "";
+}
+</script>
+
+{% include "footer.html" %}
