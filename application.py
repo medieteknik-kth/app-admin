@@ -149,6 +149,10 @@ def logout():
     session.clear()
     return redirect(url_for("google.login"))
 
+@app.route("/privacypolicy")
+def logout():
+    return render_template("privacypolicy.html")
+
 @app.route("/")
 def list_events():
     if not google.authorized:
