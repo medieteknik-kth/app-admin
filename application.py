@@ -150,7 +150,7 @@ def logout():
     return redirect(url_for("google.login"))
 
 @app.route("/privacypolicy")
-def logout():
+def privacypolicy():
     return render_template("privacypolicy.html")
 
 @app.route("/")
