@@ -76,8 +76,14 @@ committees = [
         "logo": "/static/images/qn.png"
     },
     {
-        "name": "Sektionen",
+        "name": "Sektionen för Medieteknik",
         "logo": "/static/images/medieteknik.png"
+    },
+    {
+        "name": "Datasektionen"
+    },
+    {
+        "name": "THS"
     }
 ]
 
