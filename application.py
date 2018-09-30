@@ -11,6 +11,9 @@ from datetime import datetime, date
 import ics
 import arrow
 
+from exponent_server_sdk import PushClient
+from exponent_server_sdk import PushMessage
+
 import locale
 locale.setlocale(locale.LC_ALL, 'sv_SE.UTF-8')
 
@@ -76,6 +79,12 @@ committees = [
         "logo": "/static/images/qn.png"
     },
     {
+        "name": "METAspexet"
+    },
+    {
+        "name": "Fotogruppen"
+    },
+    {
         "name": "Sektionen för Medieteknik",
         "logo": "/static/images/medieteknik.png"
     },
@@ -116,6 +125,30 @@ class Event(db.Model):
             "published": self.published,
             "facebook_url": self.facebook_url
         }
+
+class NotificationSubscription(db.Model):
+    token = db.Column(db.String(512), primary_key=True)
+    active = db.Column(db.Boolean())
+
+    styrelsen = db.Column(db.Boolean())
+    mkm = db.Column(db.Boolean())
+    komn = db.Column(db.Boolean())
+    nlg = db.Column(db.Boolean())
+    idrott = db.Column(db.Boolean())
+    matlaget = db.Column(db.Boolean())
+    medielabbet = db.Column(db.Boolean())
+    spex = db.Column(db.Boolean())
+    sn = db.Column(db.Boolean())
+    spel = db.Column(db.Boolean())
+    metadorerna = db.Column(db.Boolean())
+    mtgn = db.Column(db.Boolean())
+    sanglederiet = db.Column(db.Boolean())
+    valberedningen = db.Column(db.Boolean())
+    qn = db.Column(db.Boolean())
+    metaspexet = db.Column(db.Boolean())
+    #fotogruppen = db.Column(db.Boolean())
+    data = db.Column(db.Boolean())
+    ths = db.Column(db.Boolean())
 
 google_bp = make_google_blueprint(
     client_id=app.config["GOOGLE_CLIENT_ID"],
@@ -165,6 +198,13 @@ def list_events():
         return redirect(url_for("google.login"))
     events = Event.query.all()
     return render_template("list.html", events=events)
+
+@app.route("/notifications")
+def list_notifications():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    subscriptions = NotificationSubscription.query.all()
+    return render_template("subscriptions.html", subscriptions=subscriptions)
 
 @app.route("/settings")
 def settings():
@@ -268,6 +308,21 @@ def remove_old_images():
     # TODO
     return redirect("/")
 
+@app.route("/test_notification")
+def test_notis():
+    messages = []
+    for subscription in NotificationSubscription.query.filter(NotificationSubscription.active.is_(True)).all():
+        messages.append(PushMessage(to=subscription.token, body="Här är en notis!", data=None))
+
+    responses = PushClient().publish_multiple(messages)
+
+    message = ""
+
+    for response in responses:
+        message += response.status + ": " + response.message +"<br>"
+
+    return "Notiser:<br>" + message
+
 @app.route("/api/committee")
 def api_committe_list():
     return jsonify(committees)
@@ -277,6 +332,7 @@ def api_event_list():
     if request.args.get("format") == "app-v1":
         obj = {}
 
+        # Fel i tidszoner?
         events = Event.query.filter(Event.published.is_(True), Event.end > datetime.now()).order_by(Event.start).all()
 
         return jsonify([i.to_dict() for i in events])
@@ -285,7 +341,7 @@ def api_event_list():
         c.creator = "Sektionen för Medieteknik"
 
         for event in Event.query.filter(Event.published.is_(True)).all():
-            e = ics.Event(name=event.title, begin=arrow.get(event.start).replace(tzinfo="Europe/Stockholm"), end=arrow.get(event.end).replace(tzinfo="Europe/Stockholm"), description=event.description, location=event.location)
+            e = ics.Event(name=event.title, begin=arrow.get(event.start).replace(tzinfo="Europe/Stockholm"), end=arrow.get(event.end).replace(tzinfo="Europe/Stockholm"), location=event.location)
             c.events.add(e)
 
         return str(c)
@@ -293,3 +349,57 @@ def api_event_list():
         return jsonify([i.to_dict() for i in Event.query.filter_by(published=True).all()])
 
     return "Invalid format."
+
+@app.route("/api/register_notification", methods=["POST"])
+def api_register_notifications():
+    obj = request.get_json()
+
+    if obj is None or "token" not in obj:
+        return "Invalid format."
+
+    subscription = NotificationSubscription.query.get(obj["token"])
+    if subscription == None:
+        subscription = NotificationSubscription(token=obj["token"], active=True)
+        db.session.add(subscription)
+
+    if "styrelsen" in obj:
+        subscription.styrelsen = obj["styrelsen"]
+    if "mkm" in obj:
+        subscription.mkm = obj["mkm"]
+    if "komn" in obj:
+        subscription.komn = obj["komn"]
+    if "nlg" in obj:
+        subscription.nlg = obj["nlg"]
+    if "idrott" in obj:
+        subscription.idrott = obj["idrott"]
+    if "matlaget" in obj:
+        subscription.matlaget = obj["matlaget"]
+    if "medielabbet" in obj:
+        subscription.medielabbet = obj["medielabbet"]
+    if "spex" in obj:
+        subscription.spex = obj["spex"]
+    if "sn" in obj:
+        subscription.sn = obj["sn"]
+    if "spel" in obj:
+        subscription.spel = obj["spel"]
+    if "metadorerna" in obj:
+        subscription.metadorerna = obj["metadorerna"]
+    if "mtgn" in obj:
+        subscription.mtgn = obj["mtgn"]
+    if "sanglederiet" in obj:
+        subscription.sanglederiet = obj["sanglederiet"]
+    if "valberedningen" in obj:
+        subscription.valberedningen = obj["valberedningen"]
+    if "qn" in obj:
+        subscription.qn = obj["qn"]
+    if "metaspexet" in obj:
+        subscription.metaspexet = obj["metaspexet"]
+    if "fotogruppen" in obj:
+        subscription.fotogruppen = obj["fotogruppen"]
+    if "data" in obj:
+        subscription.data = obj["data"]
+    if "ths" in obj:
+        subscription.ths = obj["ths"]
+
+    db.session.commit()
+    return "Saved notification settings."

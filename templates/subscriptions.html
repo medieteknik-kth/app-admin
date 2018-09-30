@@ -1,0 +1,19 @@
+{% include "header.html" %}
+
+<h2>Notisprenumenationer</h2>
+<table class="table table-hover table-responsive-lg" id="eventTable">
+    <thead>
+        <tr>
+            <th scope="col">Token</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subscription in subscriptions %}
+        <tr>
+            <td>{{subscription.token}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% include "footer.html" %}
