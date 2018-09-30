@@ -146,7 +146,7 @@ class NotificationSubscription(db.Model):
     valberedningen = db.Column(db.Boolean())
     qn = db.Column(db.Boolean())
     metaspexet = db.Column(db.Boolean())
-    #fotogruppen = db.Column(db.Boolean())
+    fotogruppen = db.Column(db.Boolean())
     data = db.Column(db.Boolean())
     ths = db.Column(db.Boolean())
 
@@ -336,6 +336,9 @@ def api_event_list():
         events = Event.query.filter(Event.published.is_(True), Event.end > datetime.now()).order_by(Event.start).all()
 
         return jsonify([i.to_dict() for i in events])
+    elif "id" in request.args:
+        event = Event.query.filter_by(id=request.args.get("id")).first_or_404()
+        return jsonify(event.to_dict())
     elif request.args.get("format") == "ical":
         c = ics.Calendar()
         c.creator = "Sektionen för Medieteknik"
