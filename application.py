@@ -333,7 +333,7 @@ def remove_old_images():
 def test_notis():
     committee_code = "styrelsen"
     messages = []
-    for subscription in NotificationSubscription.query.filter(text("active=1 AND " + committee_code + "=1")).all():
+    for subscription in NotificationSubscription.query.filter(NotificationSubscription.active.is_(True), getattr(NotificationSubscription, committee_code).is_(True)).all():
         messages.append(PushMessage(to=subscription.token, body="Här är en notis!", data={"id": 1, "title": "SM#1"}))
 
     responses = PushClient().publish_multiple(messages)
