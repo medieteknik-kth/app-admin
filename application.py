@@ -171,7 +171,7 @@ def send_notification_to_subscriptions(committee, body, data):
         committee_code = "komn"
 
     messages = []
-    for subscription in NotificationSubscription.query.filter(NotificationSubscription.active.is_(True),text(committee_code + "=:trueValue")).params(trueValue=True).all():
+    for subscription in NotificationSubscription.query.filter(text("active=1 AND " + committee_code + "=1")).all():
         messages.append(PushMessage(to=subscription.token, body=body, data=data))
 
     responses = PushClient().publish_multiple(messages)
