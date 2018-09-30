@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for, s
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import func, text
 import requests
 import os
 import uuid
@@ -161,6 +161,25 @@ google_bp = make_google_blueprint(
 )
 app.register_blueprint(google_bp, url_prefix="/login")
 
+def send_notification_to_subscriptions(committee, body, data):
+    committee_code = ""
+    if committee == "Styrelsen":
+        committee_code = "styrelsen"
+    elif committee == "MKM":
+        committee_code = "mkm"
+    elif committee == "Kommunikationsnämnden":
+        committee_code = "komn"
+
+    messages = []
+    for subscription in NotificationSubscription.query.filter(NotificationSubscription.active.is_(True),text(committee_code + "=:trueValue")).params(trueValue=True).all():
+        messages.append(PushMessage(to=subscription.token, body=body, data=data))
+
+    responses = PushClient().publish_multiple(messages)
+
+    for response in responses:
+        if response.status != "ok":
+            print(response.message)
+
 @oauth_authorized.connect
 def logged_in(blueprint, token):
     resp_json = google.get("/oauth2/v2/userinfo").json()
@@ -262,6 +281,8 @@ def submit_event():
 
     db.session.add(event)
     db.session.commit()
+
+    send_notification_to_subscriptions(event.committee, "Nytt event från " + event.committee + ": " + event.title, {"id": event.id, "title": event.title})
 
     return redirect("/")
 
