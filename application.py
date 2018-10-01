@@ -167,8 +167,42 @@ def send_notification_to_subscriptions(committee, body, data):
         committee_code = "styrelsen"
     elif committee == "MKM":
         committee_code = "mkm"
+    elif committee == "Idrottsnämnden":
+        committee_code = "idrott"
+    elif committee == "Näringslivsgruppen":
+        committee_code = "nlg"
     elif committee == "Kommunikationsnämnden":
         committee_code = "komn"
+    elif committee == "Fotogruppen":
+        committee_code = "fotogruppen"
+    elif committee == "Matlaget":
+        committee_code = "matlaget"
+    elif committee == "Medielabbet":
+        committee_code = "medielabbet"
+    elif committee == "METAdorerna":
+        committee_code = "metadorerna"
+    elif committee == "Mottagningen":
+        committee_code = "mtgn"
+    elif committee == "Qulturnämnden":
+        committee_code = "qn"
+    elif committee == "Sånglederiet":
+        committee_code = "sanglederiet"
+    elif committee == "Studienämnden":
+        committee_code = "sn"
+    elif committee == "Spexmästeriet":
+        committee_code = "spex"
+    elif committee == "Valberedningen":
+        committee_code = "valberedningen"
+    elif committee == "METAspexet":
+        committee_code = "metaspexet"
+    elif committee == "Spelnörderiet":
+        committee_code = "spel"
+    elif committee == "Datasektionen":
+        committee_code = "data"
+    elif committee == "THS":
+        committee_code = "ths"
+    else:
+        return
 
     messages = []
     for subscription in NotificationSubscription.query.filter(text("active=1 AND " + committee_code + "=1")).all():
@@ -282,7 +316,8 @@ def submit_event():
     db.session.add(event)
     db.session.commit()
 
-    send_notification_to_subscriptions(event.committee, "Nytt event från " + event.committee + ": " + event.title, {"id": event.id, "title": event.title})
+    if event.published:
+        send_notification_to_subscriptions(event.committee, "Nytt event från " + event.committee + ": " + event.title, {"id": event.id, "title": event.title})
 
     return redirect("/")
 
@@ -328,23 +363,6 @@ def remove_old_images():
         return redirect(url_for("google.login"))
     # TODO
     return redirect("/")
-
-@app.route("/test_notification")
-def test_notis():
-    committee_code = "styrelsen"
-    messages = []
-    committee_attr = getattr(NotificationSubscription, committee_code)
-    for subscription in NotificationSubscription.query.filter(NotificationSubscription.active.is_(True), committee_attr.is_(True)).all():
-        messages.append(PushMessage(to=subscription.token, body="Här är en notis!", data={"id": 1, "title": "SM#1"}))
-
-    responses = PushClient().publish_multiple(messages)
-
-    message = ""
-
-    for response in responses:
-        message += response.status + ": " + response.message +"<br>"
-
-    return "Notiser:<br>" + message
 
 @app.route("/api/committee")
 def api_committe_list():
