@@ -381,7 +381,7 @@ def api_event_list():
         event = Event.query.filter_by(id=request.args.get("id")).first_or_404()
         return jsonify(event.to_dict())
     elif "committee" in request.args:
-        events = Event.query.filter(Event.published.is_(True), Event.end > datetime.now(), Event.committee.eq_(request.args.get("committee"))).all()
+        events = Event.query.filter(Event.published.is_(True), Event.end > datetime.now(), Event.committee == request.args.get("committee")).all()
         return jsonify([i.to_dict() for i in events])
     elif request.args.get("format") == "ical":
         c = ics.Calendar()
