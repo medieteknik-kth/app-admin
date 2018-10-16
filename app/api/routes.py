@@ -91,6 +91,8 @@ def register_notifications():
         subscription.metaspexet = obj["metaspexet"]
     if "fotogruppen" in obj:
         subscription.fotogruppen = obj["fotogruppen"]
+    if "mbd" in obj:
+        subscription.mbd = obj["mbd"]
     if "data" in obj:
         subscription.data = obj["data"]
     if "ths" in obj:
