@@ -5,6 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from app.home import home_bp
 import app.home.routes
 
+from app.settings import settings_bp
+import app.settings.routes
+
 from app.event import event_bp
 import app.event.routes
 
@@ -50,3 +53,4 @@ app.register_blueprint(home_bp)
 app.register_blueprint(event_bp, url_prefix='/event')
 app.register_blueprint(committee_bp, url_prefix='/committee')
 app.register_blueprint(api_bp, url_prefix='/api')
+app.register_blueprint(settings_bp, url_prefix='/settings')
