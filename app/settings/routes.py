@@ -15,5 +15,5 @@ def git():
     if not google.authorized:
         return redirect(url_for("google.login"))
     message = os.popen("git pull").read().replace("\n", "<br />")
-    os.popen("systemctl restart mediaappadmin").read().replace("\n", "<br />")
+    os.popen("systemctl restart mediaappadmin")
     return render_template("message.html", title="Deploy Info", message=message)
