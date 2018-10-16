@@ -1,0 +1,26 @@
+from app.shared.models import db
+
+class NotificationSubscription(db.Model):
+    token = db.Column(db.String(512), primary_key=True)
+    active = db.Column(db.Boolean())
+
+    styrelsen = db.Column(db.Boolean())
+    mkm = db.Column(db.Boolean())
+    komn = db.Column(db.Boolean())
+    nlg = db.Column(db.Boolean())
+    idrott = db.Column(db.Boolean())
+    matlaget = db.Column(db.Boolean())
+    medielabbet = db.Column(db.Boolean())
+    spex = db.Column(db.Boolean())
+    sn = db.Column(db.Boolean())
+    spel = db.Column(db.Boolean())
+    metadorerna = db.Column(db.Boolean())
+    mtgn = db.Column(db.Boolean())
+    sanglederiet = db.Column(db.Boolean())
+    valberedningen = db.Column(db.Boolean())
+    qn = db.Column(db.Boolean())
+    mbd = db.Column(db.Boolean())
+    metaspexet = db.Column(db.Boolean())
+    fotogruppen = db.Column(db.Boolean())
+    data = db.Column(db.Boolean())
+    ths = db.Column(db.Boolean())

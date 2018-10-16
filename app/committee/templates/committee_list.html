@@ -1,0 +1,27 @@
+{% include "header.html" %}
+
+<h2>Nämnder</h2>
+<div class="table-responsive-lg">
+    <table class="table table-hover" id="eventTable">
+        <thead>
+            <tr>
+                <th scope="col">Namn</th>
+                <th scope="col">Kort beskrivning</th>
+                <th scope="col">Prenumenanter</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for committee in committees %}
+            <tr onclick="window.location='{{url_for('committee.edit', id=committee.id)}}';" style="cursor: pointer;">
+                <td>{{committee.name}}</td>
+                <td>{{committee.shortDescription}}</td>
+                <td>{{subDict[committee.name]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a class="btn btn-primary" href="{{ url_for('committee.new') }}" role="button">Skapa ny</a>
+
+{% include "footer.html" %}

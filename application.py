@@ -145,6 +145,7 @@ class NotificationSubscription(db.Model):
     sanglederiet = db.Column(db.Boolean())
     valberedningen = db.Column(db.Boolean())
     qn = db.Column(db.Boolean())
+    mbd = db.Column(db.Boolean())
     metaspexet = db.Column(db.Boolean())
     fotogruppen = db.Column(db.Boolean())
     data = db.Column(db.Boolean())

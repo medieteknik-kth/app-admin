@@ -1,0 +1,37 @@
+h1 {
+    font-family: halyard-display, sans-serif !important;
+    font-weight: 500 !important;
+    font-style: normal;
+
+    color: #F0C900;
+    font-size: 72px;
+}
+
+h2 {
+    font-family: halyard-display, sans-serif !important;
+    font-weight: 500;
+    font-style: normal;
+
+    color: #F0C900;
+    font-size: 42px;
+}
+
+
+th, label {
+    font-family: halyard-display, sans-serif;
+    font-weight: 500;
+    font-style: normal;
+
+    color: #545454;
+}
+
+.logo {
+    font-family: halyard-display, sans-serif !important;
+    font-weight: 500;
+    font-style: normal;
+
+    vertical-align: middle;
+
+    color: white;
+    font-size: 42px;
+}
