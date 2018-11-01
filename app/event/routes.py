@@ -70,6 +70,7 @@ def submit():
     event.published = (True if request.form.get("published") == "on" else False)
     event.cover_image = ""
     event.facebook_url = request.form["facebook_url"]
+    event.current = (True if request.form.get("current") == "on" else False)
 
     if "cover_image" in request.files:
         cover_image = request.files['cover_image']
@@ -99,6 +100,7 @@ def update():
     event.start = datetime.strptime(request.form["start"], "%Y-%m-%d %H:%M")
     event.end = datetime.strptime(request.form["end"], "%Y-%m-%d %H:%M")
     event.published = (True if request.form.get("published") == "on" else False)
+    event.current = (True if request.form.get("current") == "on" else False)
     event.facebook_url = request.form["facebook_url"]
 
     if "cover_image" in request.files:

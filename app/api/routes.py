@@ -24,7 +24,7 @@ def event():
         obj = {}
 
         # Fel i tidszoner?
-        events = Event.query.filter(Event.published.is_(True), Event.end > datetime.now()).order_by(Event.start).all()
+        events = Event.query.filter(Event.published.is_(True), Event.end > datetime.now()).order_by(Event.current.desc(), Event.start).all()
 
         return jsonify([i.to_dict() for i in events])
     elif "id" in request.args:

@@ -55,6 +55,10 @@
         <input type="checkbox" class="form-check-input" id="published" name="published" {{ "checked" if event.published else "" }}>
         <label class="form-check-label" for="published">Publicerad</label>
     </div>
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="current" name="current" {{ "checked" if event.current else "" }}>
+        <label class="form-check-label" for="current">Visa som aktuell</label>
+    </div>
     <br />
     <input type="submit" class="btn btn-primary" value="Spara" />
     <a class="btn btn-danger" href="{{url_for('event.delete', id=event.id)}}" role="button" onclick="return confirm('Är du säker på att du vill ta bort eventet?')">Ta bort</a>

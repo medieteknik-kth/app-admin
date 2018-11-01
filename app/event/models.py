@@ -12,6 +12,7 @@ class Event(db.Model):
     cover_image = db.Column(db.String(256))
     facebook_url = db.Column(db.String(256))
     published = db.Column(db.Boolean())
+    current = db.Column(db.Boolean())
 
     def to_dict(self):
         return {
@@ -24,5 +25,6 @@ class Event(db.Model):
             "description": self.description,
             "cover_image": self.cover_image,
             "published": self.published,
+            "current": self.current,
             "facebook_url": self.facebook_url
         }
