@@ -84,7 +84,7 @@ def submit():
     db.session.commit()
 
     if event.published:
-        send_notification_to_subscriptions(event.committee, "Nytt event från " + event.committee + ": " + event.title, {"id": event.id, "title": event.title})
+        send_notification_to_subscriptions(event.committee, "Nytt från " + event.committee + ": " + event.title, {"id": event.id, "title": event.title})
 
     return redirect(url_for("event.index"))
 
