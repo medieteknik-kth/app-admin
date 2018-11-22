@@ -10,6 +10,7 @@
             window.onload = function () {
                 var currentTime = new Date();
                 var nextEvenSecond = new Date(currentTime);
+                nextEvenSecond.setSeconds(currentTime.getSeconds()+1);
                 nextEvenSecond.setSeconds(currentTime.getSeconds() % 2 ? currentTime.getSeconds() + 1 : currentTime.getSeconds() + 2);
                 nextEvenSecond.setMilliseconds(0);
                 var wait = nextEvenSecond.getTime() - currentTime.getTime();
