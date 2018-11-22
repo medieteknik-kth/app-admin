@@ -10,14 +10,18 @@
             window.onload = function () {
                 var currentTime = new Date();
                 var nextEvenSecond = new Date(currentTime);
-                nextEvenSecond.setSeconds(currentTime.getSeconds()+1);
                 nextEvenSecond.setSeconds(currentTime.getSeconds() % 2 ? currentTime.getSeconds() + 1 : currentTime.getSeconds() + 2);
                 nextEvenSecond.setMilliseconds(0);
                 var wait = nextEvenSecond.getTime() - currentTime.getTime();
 
+                console.log("Current time is " + currentTime);
+                console.log("Next even second is " + nextEvenSecond);
+                console.log("Needs to wait " + wait);
+
                 setTimeout(function() {
                     var video = document.getElementById("video");
                     video.play();
+                    console.log("It's now " + new Date() + ". Playing video.");
                 }, wait);
             }
         </script>
