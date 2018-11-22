@@ -1,0 +1,24 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <video id="video" style="width: 100vw; height: 100vh;" loop muted>
+            <source src="{{video}}" />
+        </video>
+
+        <script>
+            window.onload = function () {
+                var currentTime = new Date();
+                var nextEvenSecond = new Date(currentTime);
+                nextEvenSecond.setSeconds(currentTime.getSeconds() % 2 ? currentTime.getSeconds() + 1 : currentTime.getSeconds() + 2);
+                nextEvenSecond.setMilliseconds(0);
+                var wait = nextEvenSecond.getTime() - currentTime.getTime();
+
+                setTimeout(function() {
+                    var video = document.getElementById("video");
+                    video.play();
+                }, wait);
+            }
+        </script>
+    </body>
+</html>
