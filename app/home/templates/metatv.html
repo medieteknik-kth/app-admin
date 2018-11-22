@@ -7,23 +7,40 @@
         </video>
 
         <script>
-            window.onload = function () {
-                var currentTime = new Date();
-                var nextEvenSecond = new Date(currentTime);
-                nextEvenSecond.setSeconds(currentTime.getSeconds() % 2 ? currentTime.getSeconds() + 1 : currentTime.getSeconds() + 2);
-                nextEvenSecond.setMilliseconds(0);
-                var wait = nextEvenSecond.getTime() - currentTime.getTime();
+            respondToVisibility = function(element, callback) {
+                var options = {
+                    root: document.documentElement
+                }
 
-                console.log("Current time is " + currentTime);
-                console.log("Next even second is " + nextEvenSecond);
-                console.log("Needs to wait " + wait);
+                var observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        callback(entry.intersectionRatio > 0);
+                    });
+                }, options);
 
-                setTimeout(function() {
-                    var video = document.getElementById("video");
-                    video.play();
-                    console.log("It's now " + new Date() + ". Playing video.");
-                }, wait);
+                observer.observe(element);
             }
+
+            respondToVisibility(document.getElementById("video"), visible => {
+                if(visible) {
+                    var currentTime = new Date();
+                    var nextEvenSecond = new Date(currentTime);
+                    nextEvenSecond.setSeconds(currentTime.getSeconds() % 2 ? currentTime.getSeconds() + 3 : currentTime.getSeconds() + 2);
+                    nextEvenSecond.setMilliseconds(0);
+                    var wait = nextEvenSecond.getTime() - currentTime.getTime();
+
+                    console.log("Current time is " + currentTime);
+                    console.log("Next even second is " + nextEvenSecond);
+                    console.log("Needs to wait " + wait);
+
+                    setTimeout(function() {
+                        var video = document.getElementById("video");
+                        video.currentTime = 0;
+                        video.play();
+                        console.log("It's now " + new Date() + ". Playing video.");
+                    }, wait);
+                }
+            });
         </script>
     </body>
 </html>
