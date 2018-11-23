@@ -38,11 +38,12 @@
                         video.currentTime = 0;
                         video.play();
                         console.log("It's now " + new Date() + ". Playing video.");
+
+                        setTimeout(function() {
+                            video.currentTime = 0;
+                            video.pause();
+                        }, 31000);
                     }, wait);
-                }
-                else {
-                    video.currentTime = 0;
-                    video.pause();
                 }
             });
         </script>
