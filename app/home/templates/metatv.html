@@ -23,6 +23,10 @@
 
             respondToVisibility(document.getElementById("video"), visible => {
                 if(visible) {
+                    var video = document.getElementById("video");
+                    video.currentTime = 0;
+                    video.pause();
+
                     var currentTime = new Date();
                     var nextEvenSecond = new Date(currentTime);
                     nextEvenSecond.setSeconds(currentTime.getSeconds() % 2 ? currentTime.getSeconds() + 3 : currentTime.getSeconds() + 2);
@@ -38,11 +42,6 @@
                         video.currentTime = 0;
                         video.play();
                         console.log("It's now " + new Date() + ". Playing video.");
-
-                        setTimeout(function() {
-                            video.currentTime = 0;
-                            video.pause();
-                        }, 31000);
                     }, wait);
                 }
             });
