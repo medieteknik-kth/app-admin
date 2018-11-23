@@ -40,6 +40,10 @@
                         console.log("It's now " + new Date() + ". Playing video.");
                     }, wait);
                 }
+                else {
+                    video.currentTime = 0;
+                    video.pause();
+                }
             });
         </script>
     </body>
