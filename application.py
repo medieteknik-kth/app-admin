@@ -22,7 +22,7 @@ from app.shared.models import db
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized
 
-locale.setlocale(locale.LC_ALL, 'sv_SE.UTF-8')
+locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
 app.config.from_pyfile("flask.cfg")
 db.init_app(app)
