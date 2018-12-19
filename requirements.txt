@@ -6,3 +6,4 @@ ics==0.4
 Flask-Dance==1.1.0
 blinker==1.4
 exponent_server_sdk==0.2.0
+PyGreSQL==5.0.6
