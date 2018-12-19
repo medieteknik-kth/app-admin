@@ -25,15 +25,15 @@ def format_datetime(value, format="%Y-%m-%d %H:%M"):
 
 @event_bp.route("/")
 def index():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     events = Event.query.all()
     return render_template("event_list.html", events=events)
 
 @event_bp.route("/edit/<id>")
 def edit(id):
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     event = Event.query.get(id)
     if event == None:
         return "Kunde inte hitta event."
@@ -43,23 +43,23 @@ def edit(id):
 
 @event_bp.route("/delete/<id>")
 def delete(id):
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     db.session.delete(Event.query.get(id))
     db.session.commit()
     return redirect(url_for("event.index"))
 
 @event_bp.route("/new")
 def new():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     committees = Committee.query.all()
     return render_template("event_new.html", committees=committees)
 
 @event_bp.route("/submit", methods=["POST"])
 def submit():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     event = Event()
     event.title = request.form["title"]
     event.committee = request.form["committee"]
@@ -90,8 +90,8 @@ def submit():
 
 @event_bp.route("/update", methods=["POST"])
 def update():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     event = Event.query.get(request.form["id"])
     event.title = request.form["title"]
     event.committee = request.form["committee"]

@@ -11,8 +11,8 @@ from sqlalchemy import text, desc
 
 @committee_bp.route("/")
 def index():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     committees = Committee.query.order_by(desc(Committee.weight)).all()
 
     subDict = {}
@@ -29,14 +29,14 @@ def index():
 
 @committee_bp.route("/new")
 def new():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     return render_template("committee_new.html")
 
 @committee_bp.route("/edit/<id>")
 def edit(id):
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     committee = Committee.query.get(id)
     if committee == None:
         return "Kunde inte hitta nämnd."
@@ -45,16 +45,16 @@ def edit(id):
 
 @committee_bp.route("/delete/<id>")
 def delete(id):
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     db.session.delete(Committee.query.get(id))
     db.session.commit()
     return redirect(url_for("committee.index"))
 
 @committee_bp.route("/submit", methods=["POST"])
 def submit():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     committee = Committee()
     committee.name = request.form["name"]
     committee.shortDescription = request.form["shortDescription"]
@@ -68,8 +68,8 @@ def submit():
 
 @committee_bp.route("/update", methods=["POST"])
 def update():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     committee = Committee.query.get(request.form["id"])
     committee.name = request.form["name"]
     committee.shortDescription = request.form["shortDescription"]

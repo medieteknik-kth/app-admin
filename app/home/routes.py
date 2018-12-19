@@ -4,8 +4,8 @@ from . import home_bp
 
 @home_bp.route("/")
 def index():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    #if not google.authorized:
+        #return redirect(url_for("google.login"))
     return render_template("home.html")
 
 @home_bp.route("/metatv/<id>")
